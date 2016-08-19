@@ -16,6 +16,20 @@ include:
 {%- set config = redis_settings %}
 {%- endif %}
 
+redis-group:
+  group.present:
+    - name: {{ redis_settings.group }}
+
+redis-user:
+  user.present:
+    - name: {{ redis_settings.user }}
+    - gid_from_name: True
+    - home: {{ redis_settings.home }}
+    - groups:
+      - {{ redis_settings.group }}
+    - require:
+      - group: redis_group
+
 # run install_server.sh
 install-server-{{ redis_port }}:
   cmd.run:
@@ -29,8 +43,8 @@ install-server-{{ redis_port }}:
 config-redis-{{ redis_port }}:
   file.managed:
     - name: /etc/redis/redis_{{ redis_port }}.conf
-#    - user: redis
-#    - group: redis
+    - user: redis
+    - group: redis
     - mode: 755
     - makedirs: True
     - template: jinja

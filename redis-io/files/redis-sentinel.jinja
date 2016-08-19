@@ -11,14 +11,12 @@
 # Description: redis-sentinel - Persistent key-value db
 ### END INIT INFO
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-#DAEMON=/usr/bin/redis-sentinel
-DAEMON=/usr/local/redis-3.0.2/src/redis-sentinel
-DAEMON_ARGS=/etc/redis/sentinel.conf
-NAME=redis-sentinel
-DESC=redis-sentinel
- 
+DAEMON={{ settings.sentinel.daemon }}
+DAEMON_ARGS={{ settings.sentinel.cfg_file }}
+NAME={{ settings.sentinel.svc_name }}
+DESC={{ settings.sentinel.svc_name }}
 RUNDIR=/var/run/redis
-PIDFILE=$RUNDIR/redis-sentinel.pid
+PIDFILE=$RUNDIR/{{ settings.sentinel.pidfile }}
  
 test -x $DAEMON || exit 0
  
@@ -52,9 +50,7 @@ case "$1" in
 		fi
 		;;
 	stop)
-		#echo -n "Stopping $DESC: "
-		echo -n "start-stop-daemon --stop --retry forever/TERM/1 --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON"
-
+		echo -n "Stopping $DESC: "
 		if start-stop-daemon --stop --retry forever/TERM/1 --quiet --oknodo --pidfile $PIDFILE --exec $DAEMON
 		then
 			echo "$NAME."
@@ -75,10 +71,10 @@ case "$1" in
 		echo -n "$DESC is "
 		if start-stop-daemon --stop --quiet --signal 0 --name ${NAME} --pidfile ${PIDFILE}
 		then
-		echo "running"
+			echo "running"
 		else
-		echo "not running"
-		exit 1
+			echo "not running"
+			exit 1
 		fi
 		;;
  

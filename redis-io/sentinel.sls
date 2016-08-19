@@ -3,9 +3,14 @@ include:
 
 {%- from "redis-io/map.jinja" import redis_settings with context %}
 
-/etc/redis/sentinel.conf:
+/var/log/redis/sentinel.log:
   file.managed:
-#    - user: redis
+    - user: {{ redis_settings.user }}
+    - makedirs: True
+
+{{ redis_settings.sentinel.cfg_file }}:
+  file.managed:
+    - user: {{ redis_settings.user }}
     - mode: 755
     - makedirs: True
     - template: jinja
@@ -14,6 +19,17 @@ include:
       - file: download-redis-io
     - default:
       sentinel: {{ redis_settings.sentinel }}
+
+/etc/init.d/redis-sentinel:
+  file.managed:
+    - mode: 755
+    - makedirs: True
+    - template: jinja
+    - source: salt://redis-io/files/redis-sentinel.jinja
+    - default:
+      sentinel: {{ redis_settings.sentinel }}
+      settings: {{ redis_settings }}
+
 
 #service-redis-sentinel:
 #  service.running:

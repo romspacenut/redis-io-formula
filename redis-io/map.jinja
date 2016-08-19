@@ -2,7 +2,7 @@
     'Debian': {
         'svc_name': 'redis-server',
 	    'logfile': '/var/log/redis/redis-server.log',
-        'pidfile': '/var/run/redis/redis-server.pid'
+        'pidfile': '/var/run/redis/redis-server.pid',
     },
     'RedHat': {
         'svc_name': 'redis',
@@ -72,7 +72,13 @@
         'client_output_buffer_limit_slave': '256mb 64mb 60',
         'client_output_buffer_limit_pubsub': '32mb 8mb 60',
         'hz': 10,
-        'aof_rewrite_incremental_fsync': 'yes'
+        'aof_rewrite_incremental_fsync': 'yes',
+        'sentinel': {
+            'svc_name': 'redis-sentinel',
+            'cfg_file': '/etc/redis/sentinel.conf',
+            'daemon': '/usr/local/bin/redis-sentinel',
+            'pidfile': 'redis-sentinel.pid'
+        }
 	}
 }%}
 
