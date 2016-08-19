@@ -16,8 +16,9 @@
         'version': '3.2.3',
         'file_checksum': 'sha1=92d6d93ef2efc91e595c8bf578bf72baff397507',
         'nodes': {
-            6379: {},
-            7001: {}
+            6379: {
+#                'slaveof': '127.0.0.1 6397'
+            }
         },
         'daemonize': 'yes',
         'appendfilename': 'appendonly.aof',
@@ -25,21 +26,19 @@
         'appendfsync': 'everysec',
         'auto_aof_rewrite_min_size': '64mb',
         'auto_aof_rewrite_percentage': 100,
-        'bin': '/usr/local/bin/redis-server',
+#        'bin': '/usr/local/bin/redis-server',
         'bind': '127.0.0.1',
-        'database_count': 16,
-        'root_dir': '/var/lib/redis',
+#        'root_dir': '/var/lib/redis',
         'dbfilename': 'dump.rdb',
+        'user': 'redis'
         'group': 'redis',
-        'home': '/var/lib/redis',
-        'install_from': 'package',
+#        'home': '/var/lib/redis',
         'loglevel': 'notice',
         'lua_time_limit': 5000,
         'maxmemory_policy': 'volatile-lru',
-        'maxmemory_samples': 3,
+        'maxmemory_samples': 5,
         'notify_keyspace_events': '""',
         'no_appendfsync_on_rewrite': 'no',
-        'port': 6379,
         'rdbchecksum': 'yes',
         'rdbcompression': 'yes',
         'repl_disable_tcp_nodelay': 'no',
@@ -54,28 +53,31 @@
             '60 10000'
             ],
         'stop_writes_on_bgsave_error': 'yes',
-        'svc_onboot': True,
-        'svc_state': 'running',
+#        'svc_onboot': True,
+#        'svc_state': 'running',
         'tcp_backlog': 511,
         'tcp_keepalive': 0,
-        'unixsocketperm': 755,
-        'user': 'redis',
-        'servers': {
-            'slaveof_host' : '',
-            'slaveof_port' : ''
-        }
+        'syslog_enabled': 'no',
+        'databases': 16,
+        'repl_diskless_sync': 'no',
+        'repl_diskless_sync_delay': 5,
+        'maxclients': 10000,
+        'hash_max_ziplist_entries': 512,
+        'hash_max_ziplist_value': 64,
+        'list_max_ziplist_entries': 512,
+        'list_max_ziplist_value': 64,
+        'set_max_intset_entries': 512,
+        'zset_max_ziplist_entries': 128,
+        'zset_max_ziplist_value': 64,
+        'hll_sparse_max_bytes': 3000,
+        'activerehashing': 'yes',
+        'client_output_buffer_limit_normal': '0 0 0',
+        'client_output_buffer_limit_slave': '256mb 64mb 60',
+        'client_output_buffer_limit_pubsub': '32mb 8mb 60',
+        'hz': 10,
+        'aof_rewrite_incremental_fsync': 'yes'
 	}
 }%}
-
-#cluster
-#  7000
-#    bind: '0.0.0.0'
-#    port: 7000
-#sentinel
-#  port: 26379
-#  master
-#    host: '10.20.1.153'
-#    port: 7000
 
 {# Merge os_map into default_settings dictionary #}
 {% do default_settings.redis_io.update(os_map) %}
