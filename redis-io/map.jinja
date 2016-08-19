@@ -15,10 +15,10 @@
     'redis_io': {
         'version': '3.2.3',
         'file_checksum': 'sha1=92d6d93ef2efc91e595c8bf578bf72baff397507',
+        'svc_onboot': True,
+        'svc_state': 'running',
         'nodes': {
-            6379: {
-#                'slaveof': '127.0.0.1 6397'
-            }
+            6379: {}
         },
         'daemonize': 'yes',
         'appendfilename': 'appendonly.aof',
@@ -26,13 +26,12 @@
         'appendfsync': 'everysec',
         'auto_aof_rewrite_min_size': '64mb',
         'auto_aof_rewrite_percentage': 100,
-#        'bin': '/usr/local/bin/redis-server',
         'bind': '127.0.0.1',
-#        'root_dir': '/var/lib/redis',
+        'root_dir': '/var/lib/redis',
         'dbfilename': 'dump.rdb',
-        'user': 'redis'
+        'user': 'redis',
         'group': 'redis',
-#        'home': '/var/lib/redis',
+        'home': '/var/lib/redis',
         'loglevel': 'notice',
         'lua_time_limit': 5000,
         'maxmemory_policy': 'volatile-lru',
@@ -53,8 +52,6 @@
             '60 10000'
             ],
         'stop_writes_on_bgsave_error': 'yes',
-#        'svc_onboot': True,
-#        'svc_state': 'running',
         'tcp_backlog': 511,
         'tcp_keepalive': 0,
         'syslog_enabled': 'no',
