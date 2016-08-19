@@ -1,0 +1,88 @@
+{% set os_map = salt['grains.filter_by']({
+    'Debian': {
+        'svc_name': 'redis-server',
+	    'logfile': '/var/log/redis/redis-server.log',
+        'pidfile': '/var/run/redis/redis-server.pid'
+    },
+    'RedHat': {
+        'svc_name': 'redis',
+        'logfile': '/var/log/redis/redis.log',
+        'pidfile': '/var/run/redis.pid'
+    },
+}, merge=salt['pillar.get']('redis_io:lookup')) %}
+
+{% set default_settings = {
+    'redis_io': {
+        'version': '3.2.3',
+        'file_checksum': 'sha1=92d6d93ef2efc91e595c8bf578bf72baff397507',
+        'nodes': {
+            6379: {},
+            7001: {}
+        },
+        'daemonize': 'yes',
+        'appendfilename': 'appendonly.aof',
+        'appendonly': 'no',
+        'appendfsync': 'everysec',
+        'auto_aof_rewrite_min_size': '64mb',
+        'auto_aof_rewrite_percentage': 100,
+        'bin': '/usr/local/bin/redis-server',
+        'bind': '127.0.0.1',
+        'database_count': 16,
+        'root_dir': '/var/lib/redis',
+        'dbfilename': 'dump.rdb',
+        'group': 'redis',
+        'home': '/var/lib/redis',
+        'install_from': 'package',
+        'loglevel': 'notice',
+        'lua_time_limit': 5000,
+        'maxmemory_policy': 'volatile-lru',
+        'maxmemory_samples': 3,
+        'notify_keyspace_events': '""',
+        'no_appendfsync_on_rewrite': 'no',
+        'port': 6379,
+        'rdbchecksum': 'yes',
+        'rdbcompression': 'yes',
+        'repl_disable_tcp_nodelay': 'no',
+        'slave_priority': 100,
+        'slave_read_only': 'yes',
+        'slave_serve_stale_data': 'yes',
+        'slowlog_max_len': 128,
+        'slowlog_log_slower_than': 10000,
+        'snapshots': [
+            '900 1',
+            '300 10',
+            '60 10000'
+            ],
+        'stop_writes_on_bgsave_error': 'yes',
+        'svc_onboot': True,
+        'svc_state': 'running',
+        'tcp_backlog': 511,
+        'tcp_keepalive': 0,
+        'unixsocketperm': 755,
+        'user': 'redis',
+        'servers': {
+            'slaveof_host' : '',
+            'slaveof_port' : ''
+        }
+	}
+}%}
+
+#cluster
+#  7000
+#    bind: '0.0.0.0'
+#    port: 7000
+#sentinel
+#  port: 26379
+#  master
+#    host: '10.20.1.153'
+#    port: 7000
+
+{# Merge os_map into default_settings dictionary #}
+{% do default_settings.redis_io.update(os_map) %}
+
+{# Update settings defaults from pillar data #}
+{% set redis_settings = salt['pillar.get']('redis_io', default=default_settings.redis_io, merge=True) %}
+
+{% set minion_settings = salt['pillar.get'](grains['id'], default={'redis_io':''}) %}
+
+{% do redis_settings.update(minion_settings.redis_io) %}

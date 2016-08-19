@@ -1,0 +1,14 @@
+redis_io:
+  bind: 127.0.0.1
+  nodes:
+    6397:
+      bind: 127.0.0.1
+  root_dir: /var/lib/redis
+  user: redis
+  snapshots:
+    - '900 1'
+    - '300 10'
+    - '60  10000'
+  lookup:
+    svc_state: stopped
+    svc_name: redis-server
