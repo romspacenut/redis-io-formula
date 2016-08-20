@@ -28,7 +28,7 @@ redis-user:
     - groups:
       - {{ redis_settings.group }}
     - require:
-      - group: redis_group
+      - group: redis-group
 
 # run install_server.sh
 install-server-{{ redis_port }}:
@@ -43,8 +43,8 @@ install-server-{{ redis_port }}:
 config-redis-{{ redis_port }}:
   file.managed:
     - name: /etc/redis/redis_{{ redis_port }}.conf
-    - user: redis
-    - group: redis
+#    - user: {{ redis_settings.user }}
+#    - group: {{ redis_settings.group }}
     - mode: 755
     - makedirs: True
     - template: jinja

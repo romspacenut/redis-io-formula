@@ -7,6 +7,8 @@ include:
   file.managed:
     - user: {{ redis_settings.user }}
     - makedirs: True
+    - require:
+      - user: redis-user
 
 {{ redis_settings.sentinel.cfg_file }}:
   file.managed:
