@@ -33,9 +33,9 @@ Overriding the default 6379 node and install 2 nodes instead
 
 .. code-block:: yaml
 
-    redis_io:
-	  nodes:
-	    7000:
-	      bind: '0.0.0.0'
-	    7001:
-	      bind: '0.0.0.0'
+  redis_io:
+    nodes:
+      7000:
+        bind: '0.0.0.0'
+      7001:
+        bind: '0.0.0.0'
