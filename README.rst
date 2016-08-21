@@ -25,3 +25,17 @@ Runs the states to install redis, configure the common files, and the users.
 ----------------
 
 Run the sentinel state to configure and run sentinel service
+
+Pillar customizations:
+======================
+
+Overriding the default 6379 node and install 2 nodes instead
+
+.. code-block:: yaml
+
+    redis_io:
+	  nodes:
+	    7000:
+	      bind: '0.0.0.0'
+	    7001:
+	      bind: '0.0.0.0'
