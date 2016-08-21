@@ -4,7 +4,7 @@ include:
 {%- from "redis-io/map.jinja" import redis_settings with context %}
 {%- set version = redis_settings.version|default('3.2.3') %}
 {%- set root    = redis_settings.root|default('/usr/local') %}
-{%- set nodes   = salt['pillar.get']('redis_io:nodes', {'6397': []}) %}
+{%- set nodes   = salt['pillar.get']('redis_io:nodes', {'6379': []}) %}
 
 /usr/local/redis-{{ version }}/utils/install_server.sh:
   file.exists

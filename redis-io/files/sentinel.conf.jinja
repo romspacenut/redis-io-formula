@@ -40,7 +40,7 @@ sentinel {{ sentinel.announce_port }} <port>
 # unmounting filesystems.
 dir {{ sentinel.dir|default('/tmp') }}
 
-{%- if sentinel.masters %}
+{%- if sentinel.masters is defined %}
 # sentinel monitor <master-name> <ip> <redis-port> <quorum>
 #
 # Tells Sentinel to monitor this master, and to consider it in O_DOWN
