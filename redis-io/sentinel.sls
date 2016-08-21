@@ -30,12 +30,11 @@ include:
       sentinel: {{ redis_settings.sentinel }}
       settings: {{ redis_settings }}
 
-
-#service-redis-sentinel:
-#  service.running:
-#    - name: redis-sentinel
-#    - enable: True
-#    - reload: True
-#    - restart: True
-#    - watch:
-#      - file: /etc/redis/sentinel.conf
+service-redis-sentinel:
+  service.running:
+    - name: redis-sentinel
+    - enable: True
+    - reload: True
+    - restart: True
+    - watch:
+      - file: {{ redis_settings.sentinel.cfg_file }}
