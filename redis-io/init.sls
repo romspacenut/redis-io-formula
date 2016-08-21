@@ -4,23 +4,16 @@ include:
 {%- from "redis-io/map.jinja" import redis_settings with context %}
 {%- set version = redis_settings.version|default('3.2.3') %}
 {%- set root    = redis_settings.root|default('/usr/local') %}
+{%- set nodes   = salt['pillar.get']('redis_io:nodes', {'6397': []}) %}
 
 /usr/local/redis-{{ version }}/utils/install_server.sh:
   file.exists
 
-{%- for redis_port, port_config in redis_settings.nodes.items() %}
-
-{%- if port_config %}
-{%- set config = port_config %}
-{%- else %}
-{%- set config = redis_settings %}
-{%- endif %}
-
-redis-group:
+redis-io-group:
   group.present:
     - name: {{ redis_settings.group }}
 
-redis-user:
+redis-io-user:
   user.present:
     - name: {{ redis_settings.user }}
     - gid_from_name: True
@@ -28,8 +21,9 @@ redis-user:
     - groups:
       - {{ redis_settings.group }}
     - require:
-      - group: redis-group
+      - group: redis-io-group
 
+{%- for redis_port, node_cfg in nodes.items() %}
 # run install_server.sh
 install-server-{{ redis_port }}:
   cmd.run:
@@ -40,31 +34,29 @@ install-server-{{ redis_port }}:
       - file: /usr/local/redis-{{ version }}/utils/install_server.sh
 
 # Generate conf
-config-redis-{{ redis_port }}:
+/etc/redis/{{ redis_port }}.conf:
   file.managed:
-    - name: /etc/redis/redis_{{ redis_port }}.conf
-#    - user: {{ redis_settings.user }}
-#    - group: {{ redis_settings.group }}
-    - mode: 755
     - makedirs: True
     - template: jinja
     - source: salt://redis-io/files/redis.conf.jinja
-#    - require_in:
-#      service: /etc/init.d/service-redis-node-{{ redis_port }}
-#    - require:
-#      - file: redis-conf-dir-{{ redis_port }}
-#      - cmd: redis-old-init-disable
     - default:
-      config: {{ config }}
+      default_cfg: {{ redis_settings }}
+      node_cfg: {{ node_cfg }}
       port: {{ redis_port }}
+  cmd.wait:
+    - name: service redis_{{ redis_port }} stop
+    - watch:
+      - file: /etc/redis/{{ redis_port }}.conf
+
+redis_{{ redis_port }}:
   service.running:
     - name: redis_{{ redis_port }}
-    - sig: redis-server {{ config.bind }}:{{ redis_port }}
+    - sig: redis-server {{ node_cfg.bind|default(redis_settings.bind) }}:{{ redis_port }}
     - enable: True
     - reload: True
     - require:
       - cmd: build-redis-io
     - watch:
-      - file: config-redis-{{ redis_port }}
+      - file: /etc/redis/{{ redis_port }}.conf
 
 {% endfor %}

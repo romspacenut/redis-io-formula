@@ -8,12 +8,10 @@ include:
     - user: {{ redis_settings.user }}
     - makedirs: True
     - require:
-      - user: redis-user
+      - user: redis-io-user
 
 {{ redis_settings.sentinel.cfg_file }}:
   file.managed:
-    - user: {{ redis_settings.user }}
-    - mode: 755
     - makedirs: True
     - template: jinja
     - source: salt://redis-io/files/sentinel.conf.jinja

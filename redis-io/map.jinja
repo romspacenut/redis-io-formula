@@ -17,9 +17,7 @@
         'file_checksum': 'sha1=92d6d93ef2efc91e595c8bf578bf72baff397507',
         'svc_onboot': True,
         'svc_state': 'running',
-        'nodes': {
-            6379: {}
-        },
+        'nodes': [],
         'daemonize': 'yes',
         'appendfilename': 'appendonly.aof',
         'appendonly': 'no',
@@ -73,6 +71,9 @@
         'client_output_buffer_limit_pubsub': '32mb 8mb 60',
         'hz': 10,
         'aof_rewrite_incremental_fsync': 'yes',
+        'timeout': 0,
+        'aof_load_truncated': 'yes',
+        'latency_monitor_threshold': 0,
         'sentinel': {
             'svc_name': 'redis-sentinel',
             'cfg_file': '/etc/redis/sentinel.conf',
@@ -88,6 +89,3 @@
 {# Update settings defaults from pillar data #}
 {% set redis_settings = salt['pillar.get']('redis_io', default=default_settings.redis_io, merge=True) %}
 
-{% set minion_settings = salt['pillar.get'](grains['id'], default={'redis_io':''}) %}
-
-{% do redis_settings.update(minion_settings.redis_io) %}

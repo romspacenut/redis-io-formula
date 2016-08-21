@@ -38,3 +38,8 @@ build-redis-io:
       - make install
     - watch:
       - cmd: download-redis-io
+
+redis-tools:
+  pkg.installed:
+    - require:
+      - file: download-redis-io
