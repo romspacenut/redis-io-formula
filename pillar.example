@@ -1,14 +1,14 @@
 redis_io:
-  bind: 127.0.0.1
-  nodes:
-    6397:
-      bind: 127.0.0.1
-  root_dir: /var/lib/redis
-  user: redis
-  snapshots:
-    - '900 1'
-    - '300 10'
-    - '60  10000'
-  lookup:
-    svc_state: stopped
-    svc_name: redis-server
+  sentinel:
+      daemonize: 'yes'
+      logfile: '/var/log/redis/sentinel.log'
+      name: 'foo'
+      port: 26379
+      masters:
+        foo:
+          monitor:
+            host: '127.0.0.1'
+            port: 7000
+            quorum: 1
+          down_after_milliseconds: 2000
+      notification_script: '/etc/redis/notification.sh'
