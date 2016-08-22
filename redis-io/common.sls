@@ -41,5 +41,6 @@ build-redis-io:
 
 redis-tools:
   pkg.installed:
+    - skip_verify: True
     - require:
       - file: download-redis-io
