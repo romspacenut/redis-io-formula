@@ -39,6 +39,7 @@ install-server-{{ redis_port }}:
     - makedirs: True
     - template: jinja
     - source: salt://redis-io/files/redis.conf.jinja
+    - user: {{ redis_settings.user }}
     - default:
       default_cfg: {{ redis_settings }}
       node_cfg: {{ node_cfg }}

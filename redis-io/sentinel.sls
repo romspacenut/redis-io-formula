@@ -12,6 +12,7 @@ include:
 
 {{ redis_settings.sentinel.cfg_file }}:
   file.managed:
+    - user: {{ redis_settings.user }}
     - makedirs: True
     - template: jinja
     - source: salt://redis-io/files/sentinel.conf.jinja
