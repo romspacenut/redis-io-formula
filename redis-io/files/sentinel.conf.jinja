@@ -59,7 +59,9 @@ dir {{ sentinel.dir|default('/tmp') }}
 # Note: master name should not include special characters or spaces.
 # The valid charset is A-z 0-9 and the three characters ".-_".
 {%- for master, config in sentinel.masters.items() %}
-sentinel monitor {{ master }} {{ config.monitor.host }} {{ config.monitor.port }} {{ config.monitor.quorum }}
+{%- for node in config.nodes %}
+sentinel monitor {{ master }} {{ node.monitor.host }} {{ node.monitor.port }} {{ node.monitor.quorum }}
+{%- endfor %}
 {%- endfor %}
 
 {%- if auth_pass is defined %}
