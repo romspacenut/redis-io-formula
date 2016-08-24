@@ -6,6 +6,7 @@
 redis-io-dependencies:
   pkg.installed:
     - names:
+      - psmisc
       {% if grains['os_family'] == 'RedHat' %}
       - python-devel
       - make

@@ -10,6 +10,16 @@ include:
     - require:
       - user: redis-io-user
 
+/etc/init.d/redis-sentinel:
+  file.managed:
+    - mode: 755
+    - makedirs: True
+    - template: jinja
+    - source: salt://redis-io/files/redis-sentinel.jinja
+    - default:
+      sentinel: {{ redis_settings.sentinel }}
+      settings: {{ redis_settings }}
+
 {{ redis_settings.sentinel.cfg_file }}:
   file.managed:
     - user: {{ redis_settings.user }}
@@ -21,16 +31,10 @@ include:
       - file: download-redis-io
     - default:
       sentinel: {{ redis_settings.sentinel }}
-
-/etc/init.d/redis-sentinel:
-  file.managed:
-    - mode: 755
-    - makedirs: True
-    - template: jinja
-    - source: salt://redis-io/files/redis-sentinel.jinja
-    - default:
-      sentinel: {{ redis_settings.sentinel }}
-      settings: {{ redis_settings }}
+  cmd.wait:
+    - name: killall redis-sentinel
+    - watch:
+      - file: {{ redis_settings.sentinel.cfg_file }}
 
 service-redis-sentinel:
   service.running:
