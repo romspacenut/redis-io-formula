@@ -1,6 +1,9 @@
 # sentinel.conf output by Salt
 daemonize {{ sentinel.daemonize|default('yes') }}
 logfile {{ sentinel.logfile|default('/var/log/redis/sentinel.log') }}
+{%- if sentinel.bind is defined %}
+bind {{ sentinel.bind }}
+{%- endif %}
 port {{ sentinel.port|default('26379') }}
 {%- if sentinel.announce_ip is defined %}
 sentinel announce-ip {{ sentinel.announce_ip }}
@@ -29,10 +32,12 @@ sentinel failover-timeout {{ master }} {{ config.failover_timeout|default('18000
 {%- endfor %}
 {%- endif %}
 {%- if sentinel.notification_script is defined %}
+
 # SCRIPTS EXECUTION
 sentinel notification-script {{ sentinel.name }} {{ sentinel.notification_script }}
 {%- endif %}
 {%- if sentinel.client_reconfig_script is defined %}
+
 # CLIENTS RECONFIGURATION SCRIPT
 sentinel client-reconfig-script {{ sentinel.name }} {{ sentinel.client_reconfig_script }}
 {%- endif %}

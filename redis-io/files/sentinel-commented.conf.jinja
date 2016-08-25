@@ -3,6 +3,10 @@
 daemonize {{ sentinel.daemonize|default('yes') }}
 logfile {{ sentinel.logfile|default('/var/log/redis/sentinel.log') }}
 
+{%- if sentinel.bind is defined %}
+bind {{ sentinel.bind }}
+{%- endif %}
+
 # port <sentinel-port>
 # The port that this sentinel instance will run on
 port {{ sentinel.port|default('26379') }}
