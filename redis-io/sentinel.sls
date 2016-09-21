@@ -33,7 +33,7 @@ include:
       sentinel: {{ redis_settings.sentinel }}
 
 stop-redis-sentinel: 
-  cmd.wait:
+  cmd.run:
     - name: killall redis-sentinel
     - onlyif: ps xawww | grep redis-sentinel | grep -v "grep"
 
