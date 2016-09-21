@@ -31,10 +31,11 @@ include:
       - file: download-redis-io
     - default:
       sentinel: {{ redis_settings.sentinel }}
+
+stop-redis-sentinel: 
   cmd.wait:
     - name: killall redis-sentinel
-    - watch:
-      - file: {{ redis_settings.sentinel.cfg_file }}
+    - onlyif: ps xawww | grep redis-sentinel | grep -v "grep"
 
 service-redis-sentinel:
   service.running:

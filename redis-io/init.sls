@@ -60,5 +60,4 @@ redis_{{ redis_port }}:
       - cmd: build-redis-io
     - watch:
       - file: /etc/redis/{{ redis_port }}.conf
-
 {% endfor %}
