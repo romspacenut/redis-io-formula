@@ -45,10 +45,12 @@ install-server-{{ redis_port }}:
       default_cfg: {{ redis_settings }}
       node_cfg: {{ node_cfg }}
       port: {{ redis_port }}
-  cmd.wait:
+# Need to use onchanges that's available with 2016.3.x
+  cmd.run:
+    - onlyif: ps xawww | grep ":{{ redis_port }}" | grep -v "grep"
     - name: service redis_{{ redis_port }} stop
-    - watch:
-      - file: /etc/redis/{{ redis_port }}.conf
+#    - watch:
+#      - file: /etc/redis/{{ redis_port }}.conf
 
 redis_{{ redis_port }}:
   service.running:
