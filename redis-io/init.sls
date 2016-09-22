@@ -45,19 +45,20 @@ install-server-{{ redis_port }}:
       default_cfg: {{ redis_settings }}
       node_cfg: {{ node_cfg }}
       port: {{ redis_port }}
-# Need to use onchanges that's available with 2016.3.x
-  cmd.run:
-    - onlyif: ps xawww | grep ":{{ redis_port }}" | grep -v "grep"
-    - name: service redis_{{ redis_port }} stop
+#  # Need to use onchanges that's available with 2016.3.x
+#  cmd.wait:
+#    - onlyif: ps xawww | grep ":{{ redis_port }}" | grep -v "grep"
+#    - name: service redis_{{ redis_port }} restart
 #    - watch:
 #      - file: /etc/redis/{{ redis_port }}.conf
 
-redis_{{ redis_port }}:
+redis-service-{{ redis_port }}:
   service.running:
     - name: redis_{{ redis_port }}
     - sig: redis-server {{ node_cfg.bind|default(redis_settings.bind) }}:{{ redis_port }}
     - enable: True
     - reload: True
+    - restart: True
     - require:
       - cmd: build-redis-io
     - watch:
