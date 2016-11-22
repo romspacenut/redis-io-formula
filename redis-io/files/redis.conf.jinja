@@ -1,6 +1,6 @@
 # {{ port }}.conf output by Salt
 daemonize {{ node_cfg.daemonize|default(default_cfg.daemonize) }}
-pidfile /var/run/redis_{{ port }}.pid
+pidfile /var/run/redis/redis_{{ port }}.pid
 port {{ port }}
 tcp-backlog {{ node_cfg.tcp_backlog|default(default_cfg.tcp_backlog) }}
 bind {{ node_cfg.bind|default(default_cfg.bind) }}

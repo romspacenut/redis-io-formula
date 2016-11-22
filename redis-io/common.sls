@@ -45,3 +45,10 @@ redis-tools:
     - skip_verify: True
     - require:
       - file: download-redis-io
+
+/var/log/redis:
+  file.directory:
+    - user: {{ redis_settings.user }}
+    - makedirs: True
+    - require:
+      - user: redis-io-user
