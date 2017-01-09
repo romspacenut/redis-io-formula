@@ -17,7 +17,7 @@ NAME={{ settings.sentinel.svc_name }}
 DESC={{ settings.sentinel.svc_name }}
 RUNDIR=/var/run/redis
 PIDFILE=$RUNDIR/{{ settings.sentinel.pidfile }}
- 
+
 test -x $DAEMON || exit 0
  
 if [ -r /etc/default/$NAME ]

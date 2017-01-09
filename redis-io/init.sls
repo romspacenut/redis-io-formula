@@ -29,7 +29,7 @@ install-server-{{ redis_port }}:
   cmd.run:
     - name: printf '{{ redis_port }}\n/etc/redis/{{ redis_port }}.conf\n/var/log/redis_{{ redis_port }}.log\n/var/lib/redis/{{ redis_port }}\n/usr/local/bin/redis-server' | ./install_server.sh
     - cwd: /usr/local/redis-{{ version }}/utils
-    - unless: test -f /etc/redis/{{ redis_port }}.conf
+    - unless: test -f /etc/init.d/redis_{{ redis_port }}
     - require:
       - file: /usr/local/redis-{{ version }}/utils/install_server.sh
 
